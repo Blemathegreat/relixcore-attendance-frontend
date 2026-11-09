@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  /* Visual Guide: Archivo Semi Bold for paragraphs, Archivo Black for titles. */
+  body { @apply bg-brand-platinum font-sans font-semibold text-brand-ink antialiased; }
+  h1, h2, h3 { @apply font-display font-normal text-brand-teal; }
+  td, th { @apply font-medium; }
+  :focus-visible { @apply outline outline-2 outline-offset-2 outline-brand-teal; }
+  .on-teal :focus-visible { @apply outline-brand-platinum; }
+}
+
+@layer components {
+  .card { @apply rounded-2xl border border-black/5 bg-white p-5; }
+  .btn { @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-5 text-[15px] font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn-primary { @apply bg-brand-teal text-brand-platinum hover:bg-brand-teal-dark; }
+  .btn-secondary { @apply border-2 border-brand-teal bg-white text-brand-ink hover:bg-brand-platinum; }
+  .btn-danger { @apply border-2 border-brand-red bg-white text-brand-ink hover:bg-brand-platinum; }
+  .btn-ghost { @apply text-brand-platinum hover:bg-white/10; }
+  .btn-sm { @apply min-h-[36px] px-4 text-sm; }
+  .input { @apply min-h-[44px] w-full rounded-xl border-2 border-brand-teal/30 bg-white px-3 text-base text-brand-ink placeholder:text-brand-ink/50 focus:border-brand-teal disabled:bg-brand-platinum/60; }
+  .label { @apply mb-1 block text-sm font-bold text-brand-ink; }
+  .th { @apply whitespace-nowrap px-3 py-2 text-left text-sm font-bold text-brand-ink; }
+  .td { @apply px-3 py-2.5 text-sm text-brand-ink; }
+}
+
+/* Printing: A4, no app chrome, branded header comes from the report itself. */
+@page { size: A4; margin: 14mm; }
+@media print {
+  body { background: #fff !important; }
+  .report-section { break-inside: avoid; }
+  .report-break { break-before: page; }
+  thead { display: table-header-group; }
+  tr { break-inside: avoid; }
+}
