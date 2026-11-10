@@ -56,7 +56,8 @@ export default function EmployeeDashboard() {
     } catch (e) {
       if (e.code !== 'NETWORK') pendingIds.current[kind] = null;
       const d = e.details || {};
-      const extra = e.code === 'OUTSIDE_GEOFENCE' ? `Distance now: about ${d.distanceM} m. Allowed: ${d.radiusM} m.` : undefined;
+           const where = `Your phone reported ${pos.latitude.toFixed(5)}, ${pos.longitude.toFixed(5)} (accurate to about ${Math.round(pos.accuracy)} m).`;
+      const extra = e.code === 'OUTSIDE_GEOFENCE' ? `Distance now: about ${d.distanceM} m. Allowed: ${d.radiusM} m. ${where}` : undefined;
       setOutcome({
         tone: 'error',
         title: e.code === 'NETWORK' ? 'Not confirmed' : "Attendance wasn't recorded",
