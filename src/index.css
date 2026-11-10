@@ -31,7 +31,7 @@
 @media (min-width: 640px) { .sheet-actions > .btn { width: auto; } }
 @media (prefers-reduced-motion: no-preference) { dialog[open] { animation: sheet-up 220ms cubic-bezier(.2, .8, .2, 1); } }
 @keyframes sheet-up { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
-}
+
 
 /* Printing: A4, no app chrome, branded header comes from the report itself. */
 @page { size: A4; margin: 14mm; }
