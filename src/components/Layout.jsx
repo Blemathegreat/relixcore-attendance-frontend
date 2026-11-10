@@ -1,5 +1,7 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../lib/auth.jsx';
+import { ActionMenu } from './ActionMenu.jsx';
 import { Logo } from './Logo.jsx';
 
 const HR_NAV = [
@@ -14,26 +16,45 @@ const HR_NAV = [
 export function Layout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const navRef = useRef(null);
   const isHr = user.role === 'hr';
+
+  // Keep the active tab visible when the tab row scrolls sideways on a small screen.
+  useEffect(() => {
+    navRef.current?.querySelector('[aria-current="page"]')?.scrollIntoView({ inline: 'center', block: 'nearest' });
+  }, [location.pathname]);
+
+  const items = [
+    { label: 'Change password', onSelect: () => navigate('/change-password') },
+    { label: 'Log out', onSelect: async () => { await logout(); navigate('/login'); } },
+  ];
+
   return (
     <div className="min-h-screen">
       <header className="on-teal bg-brand-teal text-brand-platinum print:hidden">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-          <div className="flex items-center gap-3">
-            <Logo variant="mark" light className="h-9 w-auto" alt="" />
-            <div className="leading-tight">
+          <div className="flex min-w-0 items-center gap-3">
+            <Logo variant="mark" light className="h-9 w-auto shrink-0" alt="" />
+            <div className="min-w-0 leading-tight">
               <p className="font-display text-lg text-brand-platinum">RelixCore</p>
               <p className="text-xs">Attendance</p>
             </div>
           </div>
-          <div className="flex items-center gap-1">
-            <span className="mr-2 hidden text-sm sm:inline">{user.fullName}</span>
-            <button className="btn btn-ghost btn-sm" onClick={() => navigate('/change-password')}>Password</button>
-            <button className="btn btn-ghost btn-sm" onClick={async () => { await logout(); navigate('/login'); }}>Log out</button>
-          </div>
+          <ActionMenu
+            label="Account menu"
+            items={items}
+            triggerClassName="flex h-11 w-11 items-center justify-center rounded-full text-brand-platinum hover:bg-white/10"
+            header={
+              <div className="mb-1 border-b border-black/10 px-3 pb-2 pt-1.5">
+                <p className="truncate text-sm font-bold">{user.fullName}</p>
+                <p className="text-xs">{isHr ? 'HR' : 'Employee'} · {user.employeeId}</p>
+              </div>
+            }
+          />
         </div>
         {isHr && (
-          <nav aria-label="HR sections" className="mx-auto max-w-6xl overflow-x-auto px-3">
+          <nav ref={navRef} aria-label="HR sections" className="mx-auto max-w-6xl overflow-x-auto px-3">
             <ul className="flex gap-1 pb-2">
               {HR_NAV.map((n) => (
                 <li key={n.to}>

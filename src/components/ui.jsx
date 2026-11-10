@@ -67,7 +67,7 @@ export function DayBadges({ day }) {
   return <span className="flex flex-wrap gap-1">{out}</span>;
 }
 
-/** Native <dialog>: focus trapping and Esc handling come for free. */
+/** Native <dialog>: focus trapping and Esc come for free. Bottom sheet on phones, centred card from 640 px. */
 export function Modal({ open, onClose, title, children, wide = false }) {
   const ref = useRef(null);
   useEffect(() => {
@@ -80,7 +80,7 @@ export function Modal({ open, onClose, title, children, wide = false }) {
     <dialog
       ref={ref}
       onClose={onClose}
-      className={`w-[calc(100%-1.5rem)] rounded-2xl p-0 backdrop:bg-brand-ink/60 ${wide ? 'max-w-2xl' : 'max-w-md'}`}
+      className={`mb-0 mt-auto max-h-[92dvh] w-full max-w-none rounded-b-none rounded-t-2xl p-0 backdrop:bg-brand-ink/60 sm:m-auto sm:max-h-[90dvh] sm:w-[calc(100%-2rem)] sm:rounded-2xl ${wide ? 'sm:max-w-2xl' : 'sm:max-w-md'}`}
     >
       {open && (
         <div className="p-5">
@@ -94,7 +94,6 @@ export function Modal({ open, onClose, title, children, wide = false }) {
     </dialog>
   );
 }
-
 export function PageTitle({ children, action }) {
   return (
     <div className="mb-4 flex flex-wrap items-center justify-between gap-3 print:hidden">

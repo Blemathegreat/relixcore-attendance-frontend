@@ -41,7 +41,7 @@ function CorrectionForm({ employees, initial, onDone, onCancel }) {
       <Field label="Reason" htmlFor="c-why" hint="Required. For example: phone battery died, confirmed by supervisor.">
         <textarea id="c-why" className="input !min-h-[88px] py-2" value={f.reason} onChange={set('reason')} maxLength={500} required />
       </Field>
-      <div className="flex justify-end gap-2 pt-2">
+            <div className="sheet-actions">
         <button type="button" className="btn btn-secondary" onClick={onCancel}>Cancel</button>
         <button className="btn btn-primary" disabled={busy || f.reason.trim().length < 5}>{busy ? 'Saving…' : 'Save correction'}</button>
       </div>
