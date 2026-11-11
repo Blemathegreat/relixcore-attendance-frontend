@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from '../lib/api.js';
-import { getFreshPosition } from '../lib/geolocation.js';
+import { getBestPosition } from '../lib/geolocation.js';
 import { fmtDate, WEEKDAY_OPTIONS } from '../lib/format.js';
 import { Field, Notice, PageTitle, Spinner } from '../components/ui.jsx';
 
@@ -65,12 +65,17 @@ export default function HrSettings() {
   if (!f) return error ? <Notice tone="error">{error}</Notice> : <Spinner />;
   const set = (k) => (e) => { setSaved(false); setF((s) => ({ ...s, [k]: e.target.value })); };
 
-  async function useHere() {
-    setLocNote('Finding your location…');
+   async function useHere() {
+    setLocNote('Listening for GPS for a few seconds. Stay still…');
     try {
-      const p = await getFreshPosition();
+      const p = await getBestPosition(8000);
+      if (p.accuracy > 30) {
+        setLocNote(`Not used: the best reading is only accurate to about ${Math.round(p.accuracy)} m. Go outdoors with a clear sky, make sure Location is on with high accuracy, wait, and press the button again. Or pick the office from the satellite map instead.`);
+        return;
+      }
       setF((s) => ({ ...s, officeLatitude: Number(p.latitude.toFixed(6)), officeLongitude: Number(p.longitude.toFixed(6)) }));
-      setLocNote(`Filled from this device (accurate to about ${Math.round(p.accuracy)} m). Stand at the centre of the office for best results.`);
+      const wander = p.spreadM > 200 ? ` The readings moved about ${Math.round(p.spreadM)} m while listening, so double-check the point on the map.` : '';
+      setLocNote(`Filled from the best of ${p.readings} readings (accurate to about ${Math.round(p.accuracy)} m). Not saved yet: press "Save settings" at the bottom.${wander}`);
       setSaved(false);
     } catch (e) { setLocNote(e.message); }
   }

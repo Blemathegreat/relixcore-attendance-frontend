@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api, qs } from '../lib/api.js';
 import { useAuth } from '../lib/auth.jsx';
-import { getFreshPosition, newRequestId, LocationError } from '../lib/geolocation.js';
+import { getBestPosition, newRequestId, LocationError } from '../lib/geolocation.js';
 import { fmtShortDate, fmtMonth, fmtMinutes, monthOf, todayIn } from '../lib/format.js';
 import { AttendanceToggle } from '../components/AttendanceToggle.jsx';
 import { Badge, DayBadges, Notice, Spinner } from '../components/ui.jsx';
@@ -39,7 +39,7 @@ export default function EmployeeDashboard() {
     setBusy('locating');
     let pos;
     try {
-      pos = await getFreshPosition();
+            pos = await getBestPosition(6000);
     } catch (e) {
       setBusy(null);
       setOutcome({ tone: 'error', title: 'Location needed', message: e instanceof LocationError ? e.message : 'We could not get your location.' });
