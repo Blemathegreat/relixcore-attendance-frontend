@@ -25,9 +25,11 @@ export function Layout() {
     navRef.current?.querySelector('[aria-current="page"]')?.scrollIntoView({ inline: 'center', block: 'nearest' });
   }, [location.pathname]);
 
+   const goPassword = () => navigate('/change-password');
+  const logoutNow = async () => { await logout(); navigate('/login'); };
   const items = [
-    { label: 'Change password', onSelect: () => navigate('/change-password') },
-    { label: 'Log out', onSelect: async () => { await logout(); navigate('/login'); } },
+    { label: 'Change password', onSelect: goPassword },
+    { label: 'Log out', onSelect: logoutNow },
   ];
 
   return (
@@ -41,17 +43,29 @@ export function Layout() {
               <p className="text-xs">Attendance</p>
             </div>
           </div>
-          <ActionMenu
-            label="Account menu"
-            items={items}
-            triggerClassName="flex h-11 w-11 items-center justify-center rounded-full text-brand-platinum hover:bg-white/10"
-            header={
-              <div className="mb-1 border-b border-black/10 px-3 pb-2 pt-1.5">
-                <p className="truncate text-sm font-bold">{user.fullName}</p>
-                <p className="text-xs">{isHr ? 'HR' : 'Employee'} · {user.employeeId}</p>
-              </div>
-            }
-          />
+                  {/* Laptops and tablets (768 px and wider): visible buttons */}
+          <div className="hidden items-center gap-1 md:flex">
+            <div className="mr-3 text-right leading-tight">
+              <p className="text-sm font-bold">{user.fullName}</p>
+              <p className="text-xs">{isHr ? 'HR' : 'Employee'}</p>
+            </div>
+            <button className="btn btn-ghost btn-sm" onClick={goPassword}>Password</button>
+            <button className="btn btn-ghost btn-sm" onClick={logoutNow}>Log out</button>
+          </div>
+          {/* Phones: one three-dots menu */}
+          <div className="md:hidden">
+            <ActionMenu
+              label="Account menu"
+              items={items}
+              triggerClassName="flex h-11 w-11 items-center justify-center rounded-full text-brand-platinum hover:bg-white/10"
+              header={
+                <div className="mb-1 border-b border-black/10 px-3 pb-2 pt-1.5">
+                  <p className="truncate text-sm font-bold">{user.fullName}</p>
+                  <p className="text-xs">{isHr ? 'HR' : 'Employee'} · {user.employeeId}</p>
+                </div>
+              }
+            />
+          </div>
         </div>
         {isHr && (
           <nav ref={navRef} aria-label="HR sections" className="mx-auto max-w-6xl overflow-x-auto px-3">

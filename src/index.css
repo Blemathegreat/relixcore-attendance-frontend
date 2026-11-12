@@ -42,3 +42,9 @@
   thead { display: table-header-group; }
   tr { break-inside: avoid; }
 }
+
+
+/* Attendance logo: one soft ring when the employee signs in. Stays inside the logo's ring (scale 1.35). */
+@keyframes logo-pulse { from { transform: scale(1); opacity: 0.55; } to { transform: scale(1.35); opacity: 0; } }
+.logo-pulse { transform-box: fill-box; transform-origin: center; animation: logo-pulse 900ms ease-out forwards; }
+@media (prefers-reduced-motion: reduce) { .logo-pulse { display: none; } }
